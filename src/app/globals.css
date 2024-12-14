@@ -1,21 +1,256 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* Base Colors */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background-dark: #0f0f0f;
+  --sidebar-bg: #121212;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --accent-red: #dc2626;
+  --accent-yellow: #fbbf24;
+  --border-color: #27272a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Global Reset & Font */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--background-dark);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+a {
+  color: var(--accent-yellow);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Layout */
+.map-container {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #666 var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  max-height: 100vh;
+}
+
+/* Scrollbar Styling */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: var(--sidebar-bg);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #4a4a4a;
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a;
+}
+
+/* Divider */
+.divider {
+  margin: 0;
+  border-color: #2a2a2a;
+}
+
+/* Incident List */
+.incident-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.5rem 1.5rem;
+  overflow-y: auto;
+}
+
+.incident-list h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.incident-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.incident-list li {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  background: #1c1c1c;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.incident-list li:hover {
+  background: #2c2c2c;
+}
+
+.incident-list li.active {
+  border: 1px solid var(--accent-yellow);
+}
+
+/* Incident Details */
+.incident-time {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.incident-type {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.incident-location {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Map View */
+.map-view {
+  height: 100%;
+  width: 100%;
+}
+
+/* Map Markers */
+.marker-container {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.marker-container:hover {
+  transform: scale(1.1);
+}
+
+.marker-container.selected svg path {
+  fill: var(--accent-yellow);
+}
+
+/* Popup Styles */
+.maplibregl-popup {
+  max-width: 320px !important;
+}
+
+.maplibregl-popup-content {
+  background: #1a1a1a !important;
+  color: var(--text-primary);
+  padding: 16px !important;
+  border-radius: 8px !important;
+  border: 1px solid #333;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  font-size: 0.875rem;
+}
+
+.maplibregl-popup-close-button {
+  color: #9CA3AF !important;
+  padding: 8px !important;
+  right: 4px !important;
+  top: 4px !important;
+  font-size: 20px !important;
+  background: transparent !important;
+  border: none;
+}
+
+.maplibregl-popup-close-button:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 4px;
+}
+
+.maplibregl-popup-tip {
+  border-top-color: #1a1a1a !important;
+  border-bottom-color: #1a1a1a !important;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .map-container {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    grid-row: 3;
+    max-height: 35vh;
+    border-right: none;
+    border-top: 1px solid var(--border-color);
+    padding: 0.75rem;
+  }
+  
+  .map-view {
+    grid-row: 2;
+    min-height: 40vh;
+  }
+  
+  /* Header adjustments */
+  .sidebar h1 {
+    font-size: 1.5rem;
+  }
+
+  .sidebar h2 {
+    font-size: 1.25rem;
+  }
+
+  /* Compact list items */
+  .incident-list li {
+    padding: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .incident-type {
+    font-size: 0.875rem;
+  }
+
+  .incident-location {
+    font-size: 0.75rem;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* Small screens */
+@media (max-width: 380px) {
+  .sidebar h1 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .incident-list li,
+  .maplibregl-popup-close-button,
+  .marker-container {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }
